@@ -1,8 +1,8 @@
-# EstateOS Real Estate Management System
+# Real Estate Management System
 
-EstateOS is a Laravel real estate management system built from my Advanced Database college final project and refined as a portfolio-ready web application. It showcases a public property marketplace, user saved/request workflows, and an admin console backed by structured MySQL database features.
+A Laravel real estate management system built from my Advanced Database college final project and refined as a portfolio-ready web application. It showcases a public property marketplace, user saved/request workflows, and an admin console backed by structured MySQL database features.
 
-## Visual Showcase
+## Screenshots
 
 <p align="center">
   <img src="docs/screenshots/01-showcase.png" alt="EstateOS screenshot 1" width="48%">
