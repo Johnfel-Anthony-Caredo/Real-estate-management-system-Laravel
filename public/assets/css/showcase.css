@@ -1,0 +1,279 @@
+:root {
+  --estate-ink: #1f2933;
+  --estate-muted: #667085;
+  --estate-line: #e5e7eb;
+  --estate-surface: #ffffff;
+  --estate-soft: #f6f8fb;
+  --estate-green: #0f766e;
+  --estate-gold: #b7791f;
+  --estate-red: #c2410c;
+  --estate-blue: #2557a7;
+}
+
+body {
+  color: var(--estate-ink);
+  background: var(--estate-soft);
+}
+
+.site-blocks-cover.overlay:before,
+.inner-page-cover.overlay:before {
+  background: linear-gradient(180deg, rgba(12, 18, 28, 0.55), rgba(12, 18, 28, 0.78));
+}
+
+.site-blocks-cover h1,
+.inner-page-cover h1 {
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.form-search {
+  background: #17212f;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 18px 40px rgba(17, 24, 39, 0.18);
+}
+
+.form-search .form-control {
+  min-height: 52px;
+  border-radius: 6px !important;
+  border: 1px solid #d0d5dd;
+}
+
+.property-entry {
+  border: 1px solid var(--estate-line);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.property-entry:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 46px rgba(15, 23, 42, 0.14);
+}
+
+.property-thumbnail img,
+.admin-property-image {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.property-title a,
+.property-title {
+  color: var(--estate-ink);
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.property-price,
+.text-success {
+  color: var(--estate-green) !important;
+}
+
+.offer-type {
+  border-radius: 4px;
+  letter-spacing: 0;
+}
+
+.btn,
+.form-control,
+.card,
+.modal-content {
+  border-radius: 8px;
+}
+
+.btn-primary {
+  background: var(--estate-blue);
+  border-color: var(--estate-blue);
+}
+
+.btn-success {
+  background: var(--estate-green);
+  border-color: var(--estate-green);
+}
+
+.empty-state {
+  padding: 56px 24px;
+  text-align: center;
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.empty-state i {
+  color: var(--estate-green);
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+}
+
+.admin-hero {
+  background: linear-gradient(rgba(17, 24, 39, 0.7), rgba(17, 24, 39, 0.7)), url("../img/theme/restro00.jpg") center/cover;
+}
+
+.admin-shell-sidebar .brand-mark {
+  align-items: center;
+  background: var(--estate-green);
+  border-radius: 8px;
+  color: #fff;
+  display: inline-flex;
+  height: 42px;
+  justify-content: center;
+  width: 42px;
+}
+
+.admin-shell-sidebar .brand-copy {
+  color: var(--estate-ink);
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.admin-shell-sidebar .nav-link {
+  border-radius: 8px;
+  margin: 2px 12px;
+}
+
+.admin-shell-sidebar .nav-link.active {
+  background: #eef6f5;
+  color: var(--estate-green);
+  font-weight: 800;
+}
+
+.admin-card {
+  border: 0;
+  border-radius: 8px;
+}
+
+.admin-property-row {
+  align-items: stretch;
+  background: #fff;
+  border: 1px solid var(--estate-line);
+  border-radius: 8px;
+  display: grid;
+  gap: 0;
+  grid-template-columns: minmax(220px, 300px) 1fr;
+  margin-bottom: 18px;
+  overflow: hidden;
+}
+
+.admin-property-image {
+  height: 100%;
+  min-height: 210px;
+  width: 100%;
+}
+
+.admin-property-content {
+  padding: 20px;
+}
+
+.admin-price {
+  color: var(--estate-green);
+  font-size: 1.1rem;
+}
+
+.admin-spec-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(4, minmax(120px, 1fr));
+  margin: 16px 0;
+}
+
+.admin-spec-grid span {
+  color: var(--estate-muted);
+  font-weight: 700;
+}
+
+.admin-spec-grid i {
+  color: var(--estate-gold);
+  margin-right: 8px;
+}
+
+.admin-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.auth-shell {
+  min-height: 100vh;
+  background: #eef2f7;
+}
+
+.auth-visual {
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  position: relative;
+}
+
+.auth-visual:before {
+  background: linear-gradient(180deg, rgba(18, 26, 38, 0.3), rgba(18, 26, 38, 0.82));
+  content: "";
+  inset: 0;
+  position: absolute;
+}
+
+.auth-visual-content {
+  bottom: 48px;
+  color: #fff;
+  left: 48px;
+  max-width: 520px;
+  position: absolute;
+  right: 48px;
+}
+
+.auth-panel {
+  align-items: center;
+  display: flex;
+  min-height: 100vh;
+  padding: 48px;
+}
+
+.auth-card {
+  background: #fff;
+  border: 1px solid var(--estate-line);
+  border-radius: 8px;
+  box-shadow: 0 20px 55px rgba(15, 23, 42, 0.12);
+  margin: auto;
+  max-width: 520px;
+  padding: 40px;
+  width: 100%;
+}
+
+.auth-card h1 {
+  color: var(--estate-ink);
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.auth-card .form-control {
+  min-height: 50px;
+}
+
+@media (max-width: 991.98px) {
+  .admin-property-row {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-spec-grid {
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
+  }
+
+  .auth-visual {
+    min-height: 320px;
+  }
+
+  .auth-panel {
+    min-height: auto;
+    padding: 28px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .admin-spec-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-card {
+    padding: 28px;
+  }
+}
