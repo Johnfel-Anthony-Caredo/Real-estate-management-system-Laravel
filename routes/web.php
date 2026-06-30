@@ -23,7 +23,7 @@ Route::get('/search', [PropertiesController::class, 'searchProperties'])->name('
 // Admin routes
 Route::prefix('admin')->group(function () {
     Route::get('login', [AdminsController::class, 'showLoginForm'])->name('admin.login');
-    Route::post('login', [AdminsController::class, 'login']);
+    Route::post('login', [AdminsController::class, 'login'])->middleware('throttle:5,1');
     Route::post('logout', [AdminsController::class, 'logout'])->name('admin.logout');
     
     // Protected admin routes

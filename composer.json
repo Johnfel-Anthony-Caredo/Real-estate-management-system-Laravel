@@ -1,9 +1,9 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "johnfel/real-estate-management-system",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "description": "A Laravel real estate management system showcasing advanced database concepts.",
+    "keywords": ["laravel", "real-estate", "mysql", "advanced-database", "admin-dashboard"],
     "license": "MIT",
     "require": {
         "php": "^8.2",

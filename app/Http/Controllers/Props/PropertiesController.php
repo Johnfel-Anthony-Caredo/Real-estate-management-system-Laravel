@@ -69,10 +69,9 @@ if (auth()->check()) { // Use check() for better readability
 
     public function insertRequests(Request $request, $id) {
         $property = Property::findOrFail($id);
+        $user = Auth::user();
 
         $request->validate([
-            'name' => ['required', 'string', 'max:100'],
-            'email' => ['required', 'email', 'max:100'],
             'phone' => ['required', 'string', 'min:7', 'max:30'],
         ]);
 
@@ -89,8 +88,8 @@ if (auth()->check()) { // Use check() for better readability
             "prop_id" => $property->id,
             "agent_name" => $property->agent_name,
             "user_id" => Auth::id(),
-            "name" => $request->name,
-            "email" => $request->email,
+            "name" => $user->name,
+            "email" => $user->email,
             "phone" => $request->phone,
 
         ]); 

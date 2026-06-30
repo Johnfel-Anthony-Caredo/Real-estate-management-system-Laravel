@@ -15,30 +15,27 @@ class AdminSeeder extends Seeder
     public function run(): void
     {
         $now = Carbon::now();
-        
-        // Create 3 admin accounts
-        DB::table('admins')->insert([
+
+        if (!filter_var(env('SEED_DEMO_ADMIN', false), FILTER_VALIDATE_BOOLEAN)) {
+            $this->command?->warn('Skipped admin seeding. Set SEED_DEMO_ADMIN=true for a local demo admin.');
+            return;
+        }
+
+        $password = env('DEMO_ADMIN_PASSWORD');
+
+        if (!$password || strlen($password) < 12) {
+            $this->command?->warn('Skipped admin seeding. DEMO_ADMIN_PASSWORD must be at least 12 characters.');
+            return;
+        }
+
+        DB::table('admins')->updateOrInsert(
+            ['email' => env('DEMO_ADMIN_EMAIL', 'admin@example.test')],
             [
-                'name' => 'Admin User',
-                'email' => 'admin@realestate.com',
-                'password' => Hash::make('12345678'),
+                'name' => env('DEMO_ADMIN_NAME', 'Demo Admin'),
+                'password' => Hash::make($password),
                 'created_at' => $now,
                 'updated_at' => $now,
-            ],
-            [
-                'name' => 'Property Manager',
-                'email' => 'manager@realestate.com',
-                'password' => Hash::make('12345678'),
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-            [
-                'name' => 'System Administrator',
-                'email' => 'sysadmin@realestate.com',
-                'password' => Hash::make('12345678'),
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-        ]);
+            ]
+        );
     }
 }

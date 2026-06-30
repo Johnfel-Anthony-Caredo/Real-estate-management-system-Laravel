@@ -23,7 +23,7 @@
                         <div class="mt-4 mb-4">
                             <p class="text-uppercase text-muted font-weight-bold mb-2">Admin portal</p>
                             <h1>Sign in to manage</h1>
-                            <p class="text-muted mb-0">Use the seeded admin account for local portfolio walkthroughs.</p>
+                            <p class="text-muted mb-0">Use the local admin account configured in your environment file.</p>
                         </div>
 
                         <form method="POST" action="{{ route('admin.login') }}">
@@ -50,7 +50,7 @@
                         </form>
 
                         <div class="alert alert-light border mt-4 mb-0">
-                            <strong>Demo account:</strong> admin@realestate.com / 12345678
+                            <strong>Local demo:</strong> set <code>SEED_DEMO_ADMIN=true</code> and your own <code>DEMO_ADMIN_PASSWORD</code> before seeding.
                         </div>
                     </div>
                 </section>

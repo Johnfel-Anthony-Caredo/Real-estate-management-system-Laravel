@@ -111,23 +111,9 @@
                   </div>
 
                   <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" name="name" id="name" class="form-control" required>
+                    <label>Account</label>
+                    <p class="form-control-plaintext mb-0">{{ auth()->user()->name }} &lt;{{ auth()->user()->email }}&gt;</p>
                   </div>
-                  @error('name')
-                      <span class="text-danger" role="alert">
-                          <strong>{{ $message }}</strong>
-                      </span>
-                  @enderror
-                  <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" name="email" id="email" class="form-control" required>
-                  </div>
-                  @error('email')
-                      <span class="text-danger" role="alert">
-                          <strong>{{ $message }}</strong>
-                      </span>
-                  @enderror
                   <div class="form-group">
                     <label for="phone">Phone</label>
                     <input type="text" name="phone" id="phone" class="form-control" minlength="11" required>

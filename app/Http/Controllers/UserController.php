@@ -97,6 +97,9 @@ class UserController extends Controller
     {
         // Get current user data
         $currentUser = DB::table('users')->where('id', $id)->first();
+        if (!$currentUser) {
+            return redirect()->route('admin.users')->with('error', 'User not found.');
+        }
 
         // Check if any changes were made
         $hasChanges = false;
@@ -104,7 +107,7 @@ class UserController extends Controller
         // Validate the request data
         $rules = [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
         ];
 
         // Check if either password field is filled
@@ -172,9 +175,10 @@ class UserController extends Controller
             return redirect()->route('admin.users')
                            ->with('success', 'User added successfully.');
         } catch (\Exception $e) {
+            report($e);
             return redirect()->back()
                            ->withInput()
-                           ->with('error', 'Failed to add user: ' . $e->getMessage());
+                           ->with('error', 'Failed to add user. Please try again.');
         }
     }
     
@@ -183,6 +187,10 @@ class UserController extends Controller
      */
     public function checkEmail(Request $request)
     {
+        $request->validate([
+            'email' => 'required|email|max:255',
+        ]);
+
         $exists = User::where('email', $request->email)->exists();
         
         return response()->json(['exists' => $exists]);

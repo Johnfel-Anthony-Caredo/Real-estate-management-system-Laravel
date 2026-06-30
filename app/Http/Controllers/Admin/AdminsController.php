@@ -12,6 +12,7 @@ use App\Models\Prop\Property;
 use App\Models\Prop\HomeType;
 use App\Models\Prop\PropImage; // Add this import
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class AdminsController extends Controller
 {
@@ -213,14 +214,16 @@ class AdminsController extends Controller
                 return redirect()->route('admin.properties')->with('error', 'Property not found.');
             }
 
-            if ($property->image && file_exists(public_path('assets1/images/' . $property->image))) {
-                unlink(public_path('assets1/images/' . $property->image));
+            $propertyImagePath = public_path('assets1/images/' . basename($property->image));
+            if ($property->image && file_exists($propertyImagePath)) {
+                unlink($propertyImagePath);
             }
 
             $galleryImages = PropImage::where('prop_id', $id)->get();
             foreach ($galleryImages as $galleryImage) {
-                if ($galleryImage->image && file_exists(public_path('assets1/images/' . $galleryImage->image))) {
-                    unlink(public_path('assets1/images/' . $galleryImage->image));
+                $galleryImagePath = public_path('assets1/images/' . basename($galleryImage->image));
+                if ($galleryImage->image && file_exists($galleryImagePath)) {
+                    unlink($galleryImagePath);
                 }
             }
             
@@ -228,7 +231,8 @@ class AdminsController extends Controller
             
             return redirect()->route('admin.properties')->with('success', 'Property deleted successfully.');
         } catch (\Exception $e) {
-            return redirect()->route('admin.properties')->with('error', 'Failed to delete property: ' . $e->getMessage());
+            report($e);
+            return redirect()->route('admin.properties')->with('error', 'Failed to delete property. Please try again.');
         }
     }
     
@@ -254,6 +258,9 @@ class AdminsController extends Controller
     {
         // Get current admin data
         $currentAdmin = DB::table('admins')->where('id', $id)->first();
+        if (!$currentAdmin) {
+            return redirect()->route('admin.admins')->with('error', 'Admin not found.');
+        }
 
         // Check if any changes were made
         $hasChanges = false;
@@ -261,7 +268,7 @@ class AdminsController extends Controller
         // Validate the request data
         $rules = [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
+            'email' => 'required|string|email|max:255|unique:admins,email,' . $id,
         ];
 
         // Check if either password field is filled
@@ -329,8 +336,9 @@ class AdminsController extends Controller
             return redirect()->route('admin.hometypes')
                            ->with('success', 'Home type deleted successfully.');
         } catch (\Exception $e) {
+            report($e);
             return redirect()->route('admin.hometypes')
-                           ->with('error', 'Failed to delete home type: ' . $e->getMessage());
+                           ->with('error', 'Failed to delete home type. Please try again.');
         }
     }
 
@@ -361,9 +369,10 @@ class AdminsController extends Controller
             return redirect()->route('admin.hometypes')
                            ->with('success', 'Home type updated successfully.');
         } catch (\Exception $e) {
+            report($e);
             return redirect()->back()
                            ->withInput()
-                           ->with('error', 'Failed to update home type: ' . $e->getMessage());
+                           ->with('error', 'Failed to update home type. Please try again.');
         }
     }
     
@@ -388,8 +397,9 @@ class AdminsController extends Controller
             return redirect()->route('admin.hometypes.trashed')
                            ->with('success', 'Home type restored successfully.');
         } catch (\Exception $e) {
+            report($e);
             return redirect()->route('admin.hometypes.trashed')
-                           ->with('error', 'Failed to restore home type: ' . $e->getMessage());
+                           ->with('error', 'Failed to restore home type. Please try again.');
         }
     }
 
@@ -405,8 +415,9 @@ class AdminsController extends Controller
             return redirect()->route('admin.hometypes.trashed')
                            ->with('success', 'Home type permanently deleted.');
         } catch (\Exception $e) {
+            report($e);
             return redirect()->route('admin.hometypes.trashed')
-                           ->with('error', 'Failed to permanently delete home type: ' . $e->getMessage());
+                           ->with('error', 'Failed to permanently delete home type. Please try again.');
         }
     }
 
@@ -427,9 +438,10 @@ class AdminsController extends Controller
             return redirect()->route('admin.hometypes')
                            ->with('success', 'Home type added successfully.');
         } catch (\Exception $e) {
+            report($e);
             return redirect()->back()
                            ->withInput()
-                           ->with('error', 'Failed to add home type: ' . $e->getMessage());
+                           ->with('error', 'Failed to add home type. Please try again.');
         }
     }
 
@@ -454,9 +466,10 @@ class AdminsController extends Controller
             return redirect()->route('admin.admins')
                            ->with('success', 'Admin added successfully.');
         } catch (\Exception $e) {
+            report($e);
             return redirect()->back()
                            ->withInput()
-                           ->with('error', 'Failed to add admin: ' . $e->getMessage());
+                           ->with('error', 'Failed to add admin. Please try again.');
         }
     }
 
@@ -465,6 +478,10 @@ class AdminsController extends Controller
      */
     public function checkEmail(Request $request)
     {
+        $request->validate([
+            'email' => 'required|email|max:255',
+        ]);
+
         $exists = Admin::where('email', $request->email)->exists();
         return response()->json(['exists' => $exists]);
     }
@@ -501,7 +518,7 @@ class AdminsController extends Controller
 
         try {
             // Handle main image upload
-            $imageName = time() . '.' . $request->image->extension();
+            $imageName = (string) Str::uuid() . '.' . $request->image->extension();
             $request->image->move(public_path('assets1/images'), $imageName);
 
             // Create the property
@@ -524,7 +541,7 @@ class AdminsController extends Controller
             if ($request->hasFile('gallery')) {
                 foreach ($request->file('gallery') as $index => $image) {
                     // Generate unique name for each gallery image
-                    $galleryImageName = 'gallery_' . time() . '_' . $index . '_' . rand(1000, 9999) . '.' . $image->extension();
+                    $galleryImageName = 'gallery_' . Str::uuid() . '.' . $image->extension();
                     $image->move(public_path('assets1/images'), $galleryImageName);
 
                     // Save to prop_image table
@@ -540,9 +557,10 @@ class AdminsController extends Controller
                                   ($request->hasFile('gallery') ? count($request->file('gallery')) : 0) . 
                                   ' gallery images.');
         } catch (\Exception $e) {
+            report($e);
             return redirect()->back()
                            ->withInput()
-                           ->with('error', 'Failed to add property: ' . $e->getMessage());
+                           ->with('error', 'Failed to add property. Please try again.');
         }
     }
 
@@ -611,11 +629,12 @@ class AdminsController extends Controller
             // Handle main image upload if a new one is provided
             if ($imageChanged) {
                 // Delete old image if it exists
-                if ($property->image && file_exists(public_path('assets1/images/' . $property->image))) {
-                    unlink(public_path('assets1/images/' . $property->image));
+                $propertyImagePath = public_path('assets1/images/' . basename($property->image));
+                if ($property->image && file_exists($propertyImagePath)) {
+                    unlink($propertyImagePath);
                 }
                 
-                $imageName = time() . '.' . $request->image->extension();
+                $imageName = (string) Str::uuid() . '.' . $request->image->extension();
                 $request->image->move(public_path('assets1/images'), $imageName);
                 $property->image = $imageName;
             }
@@ -637,7 +656,7 @@ class AdminsController extends Controller
             // Handle gallery images if any
             if ($galleryChanged) {
                 foreach ($request->file('gallery') as $image) {
-                    $galleryImageName = 'gallery_' . time() . '_' . rand(1000, 9999) . '.' . $image->extension();
+                    $galleryImageName = 'gallery_' . Str::uuid() . '.' . $image->extension();
                     $image->move(public_path('assets1/images'), $galleryImageName);
 
                     // Save to prop_image table
@@ -651,9 +670,10 @@ class AdminsController extends Controller
             return redirect()->route('admin.properties')
                            ->with('success', 'Property updated successfully.');
         } catch (\Exception $e) {
+            report($e);
             return redirect()->back()
                            ->withInput()
-                           ->with('error', 'Failed to update property: ' . $e->getMessage());
+                           ->with('error', 'Failed to update property. Please try again.');
         }
     }
 
@@ -666,8 +686,9 @@ class AdminsController extends Controller
             $galleryImage = PropImage::findOrFail($id);
             
             // Delete the image file if it exists
-            if ($galleryImage->image && file_exists(public_path('assets1/images/' . $galleryImage->image))) {
-                unlink(public_path('assets1/images/' . $galleryImage->image));
+            $galleryImagePath = public_path('assets1/images/' . basename($galleryImage->image));
+            if ($galleryImage->image && file_exists($galleryImagePath)) {
+                unlink($galleryImagePath);
             }
             
             // Delete the database record
@@ -678,8 +699,9 @@ class AdminsController extends Controller
             return redirect()->route('property.edit', $propertyId)
                            ->with('success', 'Gallery image deleted successfully.');
         } catch (\Exception $e) {
+            report($e);
             return redirect()->back()
-                           ->with('error', 'Failed to delete gallery image: ' . $e->getMessage());
+                           ->with('error', 'Failed to delete gallery image. Please try again.');
         }
     }
     
@@ -757,8 +779,9 @@ class AdminsController extends Controller
             return redirect()->route('admin.requests')
                            ->with('success', 'Request status updated successfully.');
         } catch (\Exception $e) {
+            report($e);
             return redirect()->route('admin.requests')
-                           ->with('error', 'Failed to update request status: ' . $e->getMessage());
+                           ->with('error', 'Failed to update request status. Please try again.');
         }
     }
 }

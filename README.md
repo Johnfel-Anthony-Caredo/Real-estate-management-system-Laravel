@@ -44,18 +44,24 @@ A Laravel real estate management system built from my Advanced Database college 
 - Vite
 - XAMPP
 
-## Demo Accounts
+## Local Admin Setup
 
-- Admin: `admin@realestate.com` / `12345678`
-- Additional seeded admins: `manager@realestate.com`, `sysadmin@realestate.com` / `12345678`
+For local portfolio walkthroughs, create a demo admin through environment values before running the seeders:
 
-Regular users can be created from the register page or through the admin user manager.
+```env
+SEED_DEMO_ADMIN=true
+DEMO_ADMIN_NAME="Demo Admin"
+DEMO_ADMIN_EMAIL=admin@example.test
+DEMO_ADMIN_PASSWORD=choose-a-strong-local-password
+```
+
+Regular users can be created from the register page or through the admin user manager. Do not use public or shared passwords for deployed admin accounts.
 
 ## Local Setup
 
 1. Start Apache and MySQL in XAMPP.
 2. Create a MySQL database, for example `real_estate`.
-3. Copy `.env.example` to `.env` and update the database values:
+3. Copy `.env.example` to `.env`, update the app key, and confirm the database values:
 
 ```env
 DB_CONNECTION=mysql
